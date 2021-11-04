@@ -1,0 +1,24 @@
+# action.yml
+name: 'BG Version UP'
+description: 'BGプロジェクトのバージョンアップ作業を実施します'
+inputs:
+  repo:
+    description: '対象リポジトリ名(owner/repo)'
+    required: true
+  token:
+    description: 'リポジトリトークン'
+    required: true
+  current_version:
+    description: '現在のバージョン'
+    required: true
+  next_version:
+    description: '次のバージョン'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.repo }}
+    - ${{ inputs.token }}
+    - ${{ inputs.current_version }}
+    - ${{ inputs.next_version }}
