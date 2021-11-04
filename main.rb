@@ -15,6 +15,9 @@ PROTECTION_OPTION = {
 
 # コマンドライン引数から取得
 github_token, repo, current_version, next_version = ARGV
+puts repo
+puts current_version
+puts next_version
 
 current_hotfix_branch = "hotfix-#{current_version}"
 next_hotfix_branch = "hotfix-#{next_version}"
