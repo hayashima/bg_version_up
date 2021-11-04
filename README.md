@@ -1,6 +1,6 @@
 # バージョンアップ
 
-このアクションは現在の開発ブランチ(hotfix)をバージョンアップして、オープンしているプルリクエストのベースブランチを変更します。
+このアクションは現在の開発ブランチ(hotfix)をバージョンアップして、オープンしているプルリクエストのベースブランチを変更します。  
 既にバージョンアップ後の開発ブランチをリモートに作成していることが前提です。
 
 ## Inputs
@@ -14,12 +14,14 @@
 ## `current_version`
 **Required** 現在の開発ブランチバージョン
 
-## `after_version`
+## `next_version`
 **Required** バージョンアップ後の開発ブランチバージョン
 
 ## 使用例
 
-手動実行を前提としています。
+手動実行を前提としています。  
+secrets.GITHUB_TOKEN ではデフォルトブランチやプロテクトブランチの設定が出来ないので、個人アクセストークンを作成してください。  
+バージョンアップブランチの作成手順も合わせています。
 
 ```.github/workflows/main.yml
 on:
@@ -31,7 +33,6 @@ on:
       next_version:
         description: 'バージョンアップ後のバージョン'
         required: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,7 +41,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Create Release Branch
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout -b release-${{ github.event.inputs.current_version }}
           git push origin release-${{ github.event.inputs.current_version }}
@@ -50,7 +51,7 @@ jobs:
           ref: hotfix-${{ github.event.inputs.current_version }}
       - name: Create Hotfix Branch
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git checkout -b hotfix-${{ github.event.inputs.next_version }}
           git push origin hotfix-${{ github.event.inputs.next_version }}
@@ -59,7 +60,7 @@ jobs:
         uses: hayashima/bg_version_up@v1
         with:
           repo: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_TOKEN }}
           current_version: ${{ github.event.inputs.current_version }}
           next_version: ${{ github.event.inputs.next_version }}
 ```
