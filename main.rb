@@ -33,8 +33,13 @@ client.unprotect_branch(repo, current_hotfix_branch)
 # プルリクエストのベースブランチをバージョンアップした開発ブランチに変更
 pull_requests = client.pull_requests(repo, state: 'open', base: current_hotfix_branch)
 
-pull_requests.each do |pull_req|
-  client.update_pull_request(repo, pull_req.number, base: next_hotfix_branch)
+begin
+  pull_requests.each do |pull_req|
+    client.update_pull_request(repo, pull_req.number, base: next_hotfix_branch)
+  end
+rescue Octokit::UnprocessableEntity
+  # dependabotが自動でベースブランチを変えた後に更新しようとするとエラーになるので、その場合はスキップする
+  puts "プルリクNo."{pull_req.number}"は、既に更新された可能性があります。"
 end
 
 # 1つ前の開発ブランチを削除
