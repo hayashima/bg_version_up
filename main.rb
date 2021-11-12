@@ -39,7 +39,7 @@ begin
   end
 rescue Octokit::UnprocessableEntity
   # dependabotが自動でベースブランチを変えた後に更新しようとするとエラーになるので、その場合はスキップする
-  puts "プルリクNo."{pull_req.number}"は、既に更新された可能性があります。"
+  puts "プルリクNo.#{pull_req.number}は、既に更新された可能性があります。"
 end
 
 # 1つ前の開発ブランチを削除
