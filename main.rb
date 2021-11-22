@@ -31,15 +31,22 @@ client.protect_branch(repo, next_hotfix_branch, PROTECTION_OPTION.merge(PROTECT_
 client.unprotect_branch(repo, current_hotfix_branch)
 
 # プルリクエストのベースブランチをバージョンアップした開発ブランチに変更
-pull_requests = client.pull_requests(repo, state: 'open', base: current_hotfix_branch)
+flag = true
 
-pull_requests.each do |pull_req|
-  begin
-    client.update_pull_request(repo, pull_req.number, base: next_hotfix_branch)
-    puts "No:#{pull_req.number} base_branch:#{current_hotfix_branch}=>#{next_hotfix_branch}"
-  rescue Octokit::UnprocessableEntity
-    # dependabotが自動でベースブランチを変えた後に更新しようとするとエラーになるので、その場合はスキップする
-    puts "プルリクNo:#{pull_req.number}は、既に更新された可能性があります。"
+while(flag) do
+  pull_requests = client.pull_requests(repo, state: 'open', base: current_hotfix_branch)
+  pull_requests <= 30
+    flag = false
+  end
+
+  pull_requests.each do |pull_req|
+    begin
+      client.update_pull_request(repo, pull_req.number, base: next_hotfix_branch)
+      puts "No:#{pull_req.number} base_branch:#{current_hotfix_branch}=>#{next_hotfix_branch}"
+    rescue Octokit::UnprocessableEntity
+      # dependabotが自動でベースブランチを変えた後に更新しようとするとエラーになるので、その場合はスキップする
+      puts "プルリクNo:#{pull_req.number}は、既に更新された可能性があります。"
+    end
   end
 end
 
