@@ -35,7 +35,7 @@ flag = true
 
 while(flag) do
   pull_requests = client.pull_requests(repo, state: 'open', base: current_hotfix_branch)
-  if pull_requests <= 30
+  if pull_requests.size <= 30
     flag = false
   end
 
