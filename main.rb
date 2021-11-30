@@ -34,8 +34,8 @@ client.unprotect_branch(repo, current_hotfix_branch)
 flag = true
 
 while(flag) do
-  pull_requests = client.pull_requests(repo, state: 'open', base: current_hotfix_branch)
-  if pull_requests.size <= 30
+  pull_requests = client.pull_requests(repo, state: 'open', base: current_hotfix_branch, per_page: 100)
+  if pull_requests.size == 0
     flag = false
   end
 
@@ -51,4 +51,4 @@ while(flag) do
 end
 
 # 1つ前の開発ブランチを削除
-client.delete_branch(repo, current_hotfix_branch)
+# client.delete_branch(repo, current_hotfix_branch)
