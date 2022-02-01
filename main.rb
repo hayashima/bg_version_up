@@ -51,4 +51,4 @@ while(flag) do
 end
 
 # 1つ前の開発ブランチを削除
-# client.delete_branch(repo, current_hotfix_branch)
+client.delete_branch(repo, current_hotfix_branch)
